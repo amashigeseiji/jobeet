@@ -16,4 +16,19 @@ class JobeetJob extends BaseJobeetJob
   {
     return sprintf('%s at %s (%s)', $this->getPosition(), $this->getCompany(), $this->getLocation());
   }
+
+  public function getCompanySlug()
+  {
+    return Jobeet::slugfy($this->getCompany());
+  }
+
+  public function getPositionSlug()
+  {
+    return Jobeet::slugfy($this->getPosition());
+  }
+
+  public function getLocationSlug()
+  {
+    return Jobeet::slugfy($this->getLocation());
+  }
 }
