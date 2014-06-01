@@ -19,17 +19,17 @@ class JobeetJob extends BaseJobeetJob
 
   public function getCompanySlug()
   {
-    return Jobeet::slugfy($this->getCompany());
+    return Jobeet::slugify($this->getCompany());
   }
 
   public function getPositionSlug()
   {
-    return Jobeet::slugfy($this->getPosition());
+    return Jobeet::slugify($this->getPosition());
   }
 
   public function getLocationSlug()
   {
-    return Jobeet::slugfy($this->getLocation());
+    return Jobeet::slugify($this->getLocation());
   }
 
   public function save(Doctrine_Connection $conn = null)

@@ -2,7 +2,7 @@
 
 <div id="jobs">
   <?php foreach ($categories as $category): ?>
-    <div class="category_<?php echo Jobeet::slugfy($category->getName()) ?>">
+    <div class="category_<?php echo Jobeet::slugify($category->getName()) ?>">
       <div class="category">
         <div class="feed">
           <a href="">Feed</a>

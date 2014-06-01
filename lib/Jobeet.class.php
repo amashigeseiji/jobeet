@@ -1,7 +1,7 @@
 <?php
 class Jobeet
 {
-  static public function slugfy($text)
+  static public function slugify($text)
   {
     // 文字ではないもしくは数値ではないものすべてを - に置き換える
     $text = preg_replace('#[^\\pL\d]+#u', '-', $text);
