@@ -20,6 +20,6 @@
           more...
         </div>
       <?php endif; ?>
-    <?php endforeach; ?>
-  </div>
+    </div>
+  <?php endforeach; ?>
 </div>
