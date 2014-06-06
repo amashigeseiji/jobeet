@@ -39,7 +39,7 @@
   </div>
 <?php endif; ?>
 
-<div class="pagenation_desc">
+<div class="pagination_desc">
   <strong><?php echo count($pager) ?></strong> jobs in this category
 
   <?php if ($pager->haveToPaginate()): ?>
