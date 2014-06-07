@@ -54,6 +54,12 @@ class JobeetJob extends BaseJobeetJob
     return ceil(($this->getDateTimeObject('expires_at')->format('U') - time()) / 86400);
   }
 
+  public function publish()
+  {
+    $this->setIsActivated(true);
+    $this->save();
+  }
+
   public function save(Doctrine_Connection $conn = null)
   {
     if ($this->isNew() && !$this->getExpiresAt())
