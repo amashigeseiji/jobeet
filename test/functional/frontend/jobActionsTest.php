@@ -69,3 +69,91 @@ $browser->info('2 - The Job page')->
   get(sprintf('/job/sensio-labs/paris-france/%d/web-developer', $browser->getExpiredJob()->getId()))->
   with('response')->isStatusCode(404)
 ;
+
+$browser->info('3 - Post a Job page')->
+  info(' 3.1 - Submit a Job')->
+
+  get('/job/new')->
+  with('request')->begin()->
+    isParameter('module', 'job')->
+    isParameter('action', 'new')->
+  end()->
+
+  click('Preview your job', array('job' => array(
+    'company'       => 'Sensio Labs',
+    'url'           => 'http://www.sensio.com/',
+    'logo'          => sfConfig::get('sf_upload_dir').'/jobs/sensio-labs.gif',
+    'position'      => 'Developer',
+    'location'      => 'Atlanta, USA',
+    'description'   => 'You will work with symfony to develop websites for our customers.',
+    'how_to_apply'  => 'Send your resume.',
+    'email'         => 'for.a.job@example.com',
+    'is_public'     => false,
+  )))->
+
+  with('request')->begin()->
+    isParameter('module', 'job')->
+    isParameter('action', 'create')->
+  end()->
+
+  with('response')->isRedirected()->
+  followRedirect()->
+
+  with('request')->begin()->
+    isParameter('module', 'job')->
+    isParameter('action', 'show')->
+  end()
+;
+
+$browser->setTester('doctrine', 'sfTesterDoctrine');
+
+$browser->
+  info(' 3.2 - Submit a Job with invalid values')->
+
+  get('/job/new')->
+  click('Preview your job', array('job' => array(
+    'company'   => 'Sensio Labs',
+    'position'  => 'Developer',
+    'location'  => 'Atlanta, USA',
+    'email'     => 'not.an.email',
+  )))->
+
+  with('form')->begin()->
+    hasErrors(3)->
+    isError('description', 'required')->
+    isError('how_to_apply', 'required')->
+    isError('email', 'invalid')->
+  end()
+;
+
+$browser->info(' 3.3 - On the preview page, you can publish the job')->
+  createJob(array('position' => 'F001'))->
+  click('Publish', array(), array('method' => 'put', '_with_csrf' => true))->
+
+  with('doctrine')->begin()->
+    check('JobeetJob', array(
+      'position'      => 'F001',
+      'is_activated'  => true,
+    ))->
+  end()
+;
+
+$browser->info(' 3.4 - On the preview page, you can delete the job')->
+  createJob(array('position' => 'F002'))->
+  click('Delete', array(), array('method' => 'delete', '_with_csrf' => true))->
+
+  with('doctrine')->begin()->
+    check('JobeetJob', array(
+      'position'      => 'F002',
+    ), false)->
+  end()
+;
+
+$browser->info(' 3.5 - When a job is published, it cannot be edited anymore')->
+  createJob(array('position' => 'F003'), true)->
+  get(sprintf('/job/%s/edit', $browser->getJobByPosition('F003')->getToken()))->
+
+  with('response')->begin()->
+    isStatusCode(404)->
+  end()
+;
